@@ -1,0 +1,81 @@
+<html>
+<head>
+  <script type="text/javascript"  src="./fabric.js"></script>
+  <script src="./sprite.js"></script>
+</head>
+<body>
+  <canvas id="c" width="500" height="500" class="lower-canvas" style="position: absolute; width: 500px; height: 500px; left: 0px; top: 0px; user-select: none;"></canvas>
+
+  <script type="text/javascript">
+        (function() {
+  var imgObj;
+  var canvas = this.__canvas = new fabric.Canvas('c');
+  fabric.Object.prototype.originX = fabric.Object.prototype.originY = 'center';
+  fabric.Object.prototype.transparentCorners = false;
+
+  var rand = function (num) {
+            return Math.floor(Math.random() * num+1);
+        };
+  var speedX = rand(5), speedY = rand(5);
+
+  for (var i = 0, len = 1; i < len; i++) {
+    for (var j = 0, jlen = 1; j < jlen; j++) {
+      fabric.Sprite.fromURL('./sprite.png', createSprite(i, j));
+    }
+  }
+
+  function createSprite(i, j) {
+    return function(sprite) {
+      sprite.set({
+        left: i * 100 + 50,
+        top: j * 100 + 50,
+        //angle: fabric.util.getRandomInt(-30, 30)
+      });
+      canvas.add(sprite);
+      imgObj = sprite;
+      setTimeout(function() {
+        sprite.play();
+      }, fabric.util.getRandomInt(1, 10) * 100);
+    };
+  }
+
+  var dx = 100, maxx = 500, maxy = 500;
+
+
+  (function render() {
+    canvas.renderAll();
+    if(imgObj){
+    var dx = imgObj.left,dy = imgObj.top;
+     // imgObj.set({
+     //    left: 200,
+     //    top: 200
+     //  });
+     if(dx + 100 > maxx){
+        speedX = -speedX;
+      }
+      if(dx < 100){
+        speedX = Math.abs(speedX);
+      }
+      if(dy + 100 > maxy){
+        speedY = -1;
+      }
+      if(dy < 100){
+      speedY = Math.abs(speedY);
+      }
+      dx += speedX;
+      dy += speedY;
+      imgObj.set({
+        left: dx,
+        top: dy
+      });
+    }
+    fabric.util.requestAnimFrame(render);
+
+    // setTimeout(function(){
+
+    // }, 5000);
+
+  })();
+})();
+  </script></body>
+</html>
